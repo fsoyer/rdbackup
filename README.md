@@ -10,7 +10,7 @@ Changelog :
 * 3.3.5 - Added rollback on backup directory with --check-destination if backup fails
 * 3.3.4 - Added a variable for mail executable program to enable alternatives (mailx, nail, ...)
 * 3.3.3 - Begin with wakeonlan and ping test loop to stop script if host is unreachable
-** Added --print-statistics to rdiff options in conf.sample
+ * Added --print-statistics to rdiff options in conf.sample
 * 3.3.2 - Added mysqlcheck before mysqldump
 * 3.3.1 - moving pre-script execution at the beginning of the main loop (exit if it fails w/ going further)
 * 3.3 - Stable (merge experiment -> master, 3.2.2 -> 3.3)
