@@ -1,0 +1,113 @@
+# Rdbackup configuration file
+# v3.5
+
+# --------------------------------------
+# SOME GLOBAL VARIABLES
+# --------------------------------------
+# Uncomment and change this if it needs non-default values (see .sh script for default ones)
+#MAILBIN="/usr/bin/mail -s"
+#RDIFF_OPTS="-v5 --force --create-full-path --exclude-fifos --exclude-sockets --print-statistics"
+#RETENTION=1W
+#MYDB="mysql --execute 'show databases\G' --password=$MYSQL_PASSWORD | grep -v row | sed -e 's/Database: //g' | grep -v mysql | grep -v information_schema | grep -v performance_schema"
+# Or : you can list manually the databases, one by line inside the quotes, e.g :
+# MYDB='<mysql_db_name1>
+# <mysql_db_name2>'
+#MYSQLDUMP_OPTS="--routines"
+#PGDB="su - postgres -c 'psql -l --pset tuples_only' | awk '{print \$1}' | grep -v ^$ | grep -v template | grep -v : | grep -v '|'"
+# Or : you can list manually the databases, one by line inside the quotes, e.g :
+# PGDB='<pgsql_db_name1>
+# <pgsql_db_name2>'
+#PGSQLDUMP_OPTS=""
+# --------------------------------------
+# Mails destination
+# --------------------------------------
+# If more than one mail address needed : MAIL_ADMIN="admin1@domain.com admin2@domain.com"
+MAIL_ADMIN=admin1@domain.com
+# Mail on errors are always sent, must we sent mail on success ? (Default: yes)
+MAIL_IF_SUCCESS=1
+# --------------------------------------
+# Server to backup / Backup server
+# --------------------------------------
+# Server name used in dump file names, and mails and messages sent
+SERVERNAME=server.domain.com
+# This suffixe will be added to dump (mysql, ldap, ...) and log/pid file names
+# and eventually to list/exclude file name
+SUFFIX=server
+# Backup source (default : local) = server to backup
+# SLOCAL=0 : (0=not local) backup FROM a remote server (via SSH)
+# SLOCAL=1 : (1=local) backup FROM a local directory (or NFS mount or SMB mount)
+SLOCAL=1
+# Backup destination (default : remote) = backup (rdiff-backup) server
+# DLOCAL=0 : (0=not local) backup TO a remote server (via SSH)
+# DLOCAL=1 : (1=local) backup TO a local directory (or NFS mount or SMB mount)
+DLOCAL=0
+# IP (or DNS fqdn name), port, and user if source OR destination is remote
+REMOTEIP=192.168.0.5
+REMOTEPORT=22
+REMOTEUSR=root
+# --------------------------------------
+# Some directories
+# --------------------------------------
+# Rdiff-backup destination directory (on local or on remote server)
+BCK_DIR=/home/backup/$SERVERNAME
+# Path where are rdbackup.sh, .conf, .list and .exclude (default: same directory as script)
+SCRIPT_DIR=$(dirname $0)
+# Specific path for mysql dumps, ldap dumps (on local or on remote server)
+DUMP_DIR=/home/backup
+# --------------------------------------
+# Some file names
+# --------------------------------------
+# directories to backup or exclude
+LIST=$SCRIPT_DIR/rdbackup_${SUFFIX}.list
+EXCLUDE=$SCRIPT_DIR/rdbackup_${SUFFIX}.exclude
+# LOG and other files
+LOG_FILE=rdbackup_${SUFFIX}.log
+PID_FILE=rdbackup_${SUFFIX}.pid
+# Script to launch BEFORE backup
+PRESCRIPT=
+# Script to launch AFTER backup
+POSTSCRIPT=
+# --------------------------------------
+# Databases backups
+# --------------------------------------
+# Stop Apache before dumping databases ? Yes if STOPAPACHE=1
+STOPAPACHE=0
+# Keep one week (=0) or just last backup (=1)
+JUSTLAST=0
+# --------------------------------------
+# MySQL dump
+# --------------------------------------
+# Default: disabled (MYSQLDUMP=0)
+MYSQLDUMP=0 
+# Be aware ! This conf file must be protected as it contains clear mysql password
+# TODO : how to avoid this password in clear text ?
+# NOTE : quote password with simple quotes + escape reserved chars ($,...)
+MYSQL_PASSWORD='Mot_de_passe_MySQL'
+# --------------------------------------
+# PostgreSQL dump
+# --------------------------------------
+# Default: disabled (PGSQLDUMP=0)
+PGSQLDUMP=0
+# --------------------------------------
+# LDAP dump
+# --------------------------------------
+# Default: disabled (SLAPCAT=0)
+SLAPCAT=0
+# --------------------------------------
+# SOGO backup
+# --------------------------------------
+# Default: disabled (SOGOBACKUP=0)
+SOGOBACKUP=0
+# --------------------------------------
+# stop/start STOPSEAFILE if needed
+# --------------------------------------
+# Default: disabled (STOPSEAFILE=0)
+STOPSEAFILE=0
+# --------------------------------------
+# WakeOnLan
+# --------------------------------------
+# If SLOCAL=1 or DLOCAL=1 Wake on lan the backuped/backup server 
+# Default: disabled (WAKEONLAN=0)
+WAKEONLAN=0
+# Wakeonlan need to know the MAC address of the server to wake up
+MAC="00:24:8c:ac:8a:db"
