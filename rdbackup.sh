@@ -20,6 +20,7 @@
 ERROR_FLAG=0
 ERROR=0
 ERRORS="ERREURS: "
+PINGTEST=1
 
 ELAPSED=$(which time)
 if [ ! -x $ELAPSED ]
@@ -166,32 +167,35 @@ then
    then
       STARTTIME=$(date +%s)
       ELAPSEDTIME=0
-      ping -c 1 $REMOTEIP >> $SCRIPT_DIR/$LOG_FILE 2>&1
-      # If server is unreachable, try for one hour
-      while [ $? -ne 0 -a $ELAPSEDTIME -lt 3600 ]
-      do
-         if [ $WAKEONLAN -eq 1 ]
-         then
-            WAKEONLANBIN=$(which wakeonlan)
-            if [ $WAKEONLANBIN ]
+      if [ $PINGTEST -eq 1 ]
+      then
+         ping -c 1 $REMOTEIP >> $SCRIPT_DIR/$LOG_FILE 2>&1
+         # If server is unreachable, try for one hour
+         while [ $? -ne 0 -a $ELAPSEDTIME -lt 3600 ]
+         do
+            if [ $WAKEONLAN -eq 1 ]
             then
-               $WAKEONLANBIN $MAC 2>> $SCRIPT_DIR/$LOG_FILE
-               sleep 60
-               ping -c 1 $REMOTEIP
-               if [ $? -ne 0 ]
+               WAKEONLANBIN=$(which wakeonlan)
+               if [ $WAKEONLANBIN ]
                then
-                  echo "$REMOTEIP injoignable !" >> $SCRIPT_DIR/$LOG_FILE 2>&1
-				  rm -f $APPLICATION_DIR/$PID_FILE
+                  $WAKEONLANBIN $MAC 2>> $SCRIPT_DIR/$LOG_FILE
+                  sleep 60
+                  ping -c 1 $REMOTEIP
+                  if [ $? -ne 0 ]
+                  then
+                     echo "$REMOTEIP injoignable !" >> $SCRIPT_DIR/$LOG_FILE 2>&1
+   				  rm -f $APPLICATION_DIR/$PID_FILE
+                     exit 1
+                  fi
+               else
+                  echo "Programme WAKEONLAN introuvable !" >> $SCRIPT_DIR/$LOG_FILE 2>&1
                   exit 1
                fi
-            else
-               echo "Programme WAKEONLAN introuvable !" >> $SCRIPT_DIR/$LOG_FILE 2>&1
-               exit 1
             fi
-         fi
-         ELAPSEDTIME=$(($(date +%s)-STARTTIME))
-         ping -c 1 $REMOTEIP >> /dev/null 2>&1
-      done
+            ELAPSEDTIME=$(($(date +%s)-STARTTIME))
+            ping -c 1 $REMOTEIP >> /dev/null 2>&1
+         done
+      fi
       if [ $? -ne 0 ]
       then
          rm -f $SCRIPT_DIR/$PID_FILE
