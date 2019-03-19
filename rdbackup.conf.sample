@@ -13,6 +13,11 @@
 # MYDB='<mysql_db_name1>
 # <mysql_db_name2>'
 #MYSQLDUMP_OPTS="--routines"
+# Change JOUR format to change retention. Ex : $(date +%w) keeps a week, $(date +%d) keeps one month.
+#JOUR=$(date +%w)
+# Encrypt the dump file if MYENCRYPT=1. If 1, don't forget to initialize a password in MYENCPASS.
+# MYENCRYPT=0
+# MYENCPASS=""
 #PGDB="su - postgres -c 'psql -l --pset tuples_only' | awk '{print \$1}' | grep -v ^$ | grep -v template | grep -v : | grep -v '|'"
 # Or : you can list manually the databases, one by line inside the quotes, e.g :
 # PGDB='<pgsql_db_name1>

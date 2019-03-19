@@ -36,17 +36,27 @@ fi
 # --------------------------------------
 MAILBIN="/usr/bin/mail -s"
 # --------------------------------------
-# Rdiff-backup options 
+# Rdiff-backup default options 
 # --------------------------------------
 RDIFF_OPTS="-v4 --force --create-full-path --exclude-fifos --exclude-sockets --print-statistics"
 RETENTION=1W
 # --------------------------------------
-# Databases options 
+# Databases default options 
 # --------------------------------------
 MYSQLDUMP_OPTS="--routines"
+MYENCRYPT=0
+MYENCPASS=""
 PGSQLDUMP_OPTS=""
 STOPSEAFILE=0
 SOGOBACKUP=0
+
+# How many backups to keep
+if [ $JUSTLAST -eq 0 ]
+then
+   JOUR=$(date +%w)
+else
+   JOUR=0
+fi
 
 # --------------------------------------
 # Load variables from config file
@@ -73,13 +83,6 @@ else
    fi
 fi
 
-# How many backups to keep
-if [ $JUSTLAST -eq 0 ]
-then
-   JOUR=$(date +%w)
-else
-   JOUR=0
-fi
 # --------------------------------------
 # Databases list 
 # Can't be initialized before including .conf file because we need databases PASSWORDs
@@ -301,8 +304,14 @@ then
             ERRORS="$ERRORS MYSQLDUMP=error $ERROR:"
             ERROR_FLAG=1
          else
-            $SSHCMD "rm -f $DUMP_DIR/my_${SUFFIX}_$(echo $DB|tr ' ' '_')_${JOUR}.sql.gz" 2>> $SCRIPT_DIR/$LOG_FILE
-            $SSHCMD "gzip $DUMP_DIR/my_${SUFFIX}_$(echo $DB|tr ' ' '_')_${JOUR}.sql" 2>> $SCRIPT_DIR/$LOG_FILE
+            if [ $MYENCRYPT -eq 1 ]
+            then
+               $SSHCMD "rm -f $DUMP_DIR/my_${SUFFIX}_$(echo $DB|tr ' ' '_')_${JOUR}.sql.gz.enc" 2>> $SCRIPT_DIR/$LOG_FILE
+               $SSHCMD "dd if=$DUMP_DIR/my_${SUFFIX}_$(echo $DB|tr ' ' '_')_${JOUR}.sql | gzip - | openssl des3 -salt -k $MYENCPASS | dd of=$DUMP_DIR/my_${SUFFIX}_$(echo $DB|tr ' ' '_')_${JOUR}.sql.gz.enc" 2>> $SCRIPT_DIR/$LOG_FILE
+            else
+               $SSHCMD "rm -f $DUMP_DIR/my_${SUFFIX}_$(echo $DB|tr ' ' '_')_${JOUR}.sql.gz" 2>> $SCRIPT_DIR/$LOG_FILE
+               $SSHCMD "gzip $DUMP_DIR/my_${SUFFIX}_$(echo $DB|tr ' ' '_')_${JOUR}.sql" 2>> $SCRIPT_DIR/$LOG_FILE
+            fi
          fi
       done
       IFS=$oIFS # force reset IFS
