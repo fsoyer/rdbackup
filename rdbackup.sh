@@ -397,7 +397,7 @@ then
             ERROR_FLAG=1
          else
             $SSHCMD "rm -f $DUMP_DIR/sogobackup_${JOUR}.tgz" 2>> $SCRIPT_DIR/$LOG_FILE
-            $SSHCMD "tar -cvzf $DUMP_DIR/sogobackup_${JOUR}.tgz $DUMP_DIR/sogo_backups/*" 2>> $SCRIPT_DIR/$LOG_FILE
+            $SSHCMD "tar -cvzf $DUMP_DIR/sogobackup_${JOUR}.tgz $DUMP_DIR/sogo_backups/*" >> $SCRIPT_DIR/$LOG_FILE 2>&1
          fi
       else
          echo "Programme SOGO-TOOL introuvable !" >> $SCRIPT_DIR/$LOG_FILE 2>&1
