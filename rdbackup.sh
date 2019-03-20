@@ -77,11 +77,9 @@ else
    fi
 fi
 
-# How many backups to keep
-if [ $JUSTLAST -eq 0 ]
+# Just keep one backup (overwrite always "file_0.xxx")
+if [ $JUSTLAST -ne 0 ]
 then
-   JOUR=$(date +%w)
-else
    JOUR=0
 fi
 
