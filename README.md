@@ -5,6 +5,8 @@ http://wiki.kogite.fr/index.php/Rdiff-backup
 freely based on sbackup.sh (RSYNC)
 
 Changelog :
+* 3.6 - Add the ability to encrypt mysql dump files
+* 3.5 - Add PINGTEST variable to disable ping test on systems prohibiting it (which stops the backup script)
 * 3.4 - Move some global variables from .conf to .sh. Variable can be overwritten if added (uncommented) in the .conf file
 * 3.3.6 - Suppress "grep -v postgre" from pg_dump to backup Postre system db
 * 3.3.5 - Added rollback on backup directory with --check-destination if backup fails

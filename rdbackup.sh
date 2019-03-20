@@ -1,6 +1,6 @@
 #!/bin/bash
 # Backup Script (RDIFF-BACKUP over SSH and RSYNC)
-# v3.5
+# v3.6
 # See README.md for details
 # (c) 2005, Frank Soyer <frank.soyer@gmail.com>
 
