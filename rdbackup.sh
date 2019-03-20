@@ -308,8 +308,11 @@ then
          else
             if [ $MYENCRYPT -eq 1 ]
             then
+            # Encrypt the sql file while compressing it.
+            # Unencrypt command : dd if=file.sql.gz.enc | openssl des3 -d -k $MYENCPASS | gunzip - | dd of=file.sql
                $SSHCMD "rm -f $DUMP_DIR/my_${SUFFIX}_$(echo $DB|tr ' ' '_')_${JOUR}.sql.gz.enc" 2>> $SCRIPT_DIR/$LOG_FILE
                $SSHCMD "dd if=$DUMP_DIR/my_${SUFFIX}_$(echo $DB|tr ' ' '_')_${JOUR}.sql | gzip - | openssl des3 -salt -k $MYENCPASS | dd of=$DUMP_DIR/my_${SUFFIX}_$(echo $DB|tr ' ' '_')_${JOUR}.sql.gz.enc" 2>> $SCRIPT_DIR/$LOG_FILE
+               $SSHCMD "rm -f $DUMP_DIR/my_${SUFFIX}_$(echo $DB|tr ' ' '_')_${JOUR}.sql" 2>> $SCRIPT_DIR/$LOG_FILE
             else
                $SSHCMD "rm -f $DUMP_DIR/my_${SUFFIX}_$(echo $DB|tr ' ' '_')_${JOUR}.sql.gz" 2>> $SCRIPT_DIR/$LOG_FILE
                $SSHCMD "gzip $DUMP_DIR/my_${SUFFIX}_$(echo $DB|tr ' ' '_')_${JOUR}.sql" 2>> $SCRIPT_DIR/$LOG_FILE
