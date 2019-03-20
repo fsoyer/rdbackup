@@ -40,6 +40,8 @@ MAILBIN="/usr/bin/mail -s"
 # --------------------------------------
 RDIFF_OPTS="-v4 --force --create-full-path --exclude-fifos --exclude-sockets --print-statistics"
 RETENTION=1W
+JUSTLAST=0
+JOUR=$(date +%w)
 # --------------------------------------
 # Databases default options 
 # --------------------------------------
@@ -49,14 +51,6 @@ MYENCPASS=""
 PGSQLDUMP_OPTS=""
 STOPSEAFILE=0
 SOGOBACKUP=0
-
-# How many backups to keep
-if [ $JUSTLAST -eq 0 ]
-then
-   JOUR=$(date +%w)
-else
-   JOUR=0
-fi
 
 # --------------------------------------
 # Load variables from config file
@@ -81,6 +75,14 @@ else
 	  rm -f $APPLICATION_DIR/$PID_FILE
       exit 1
    fi
+fi
+
+# How many backups to keep
+if [ $JUSTLAST -eq 0 ]
+then
+   JOUR=$(date +%w)
+else
+   JOUR=0
 fi
 
 # --------------------------------------
