@@ -267,6 +267,7 @@ then
       echo "Stopping Seafile" >> $SCRIPT_DIR/$LOG_FILE
       $SSHCMD "systemctl stop seahub"
       $SSHCMD "systemctl stop seafile"
+      $SSHCMD "su - seafile -c 'seafile-server-latest/seaf-gc.sh'"
    fi
 
 ## Mysql dump
