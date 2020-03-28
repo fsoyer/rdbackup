@@ -268,6 +268,12 @@ then
       $SSHCMD "systemctl stop seahub"
       $SSHCMD "systemctl stop seafile"
       $SSHCMD "su - seafile -c 'seafile-server-latest/seaf-gc.sh'"
+      ERROR=$?
+         if [ $ERROR -ne 0 ]
+         then
+            ERRORS="$ERRORS SEAFILE GC=error $ERROR:"
+            ERROR_FLAG=1
+         fi
    fi
 
 ## Mysql dump
