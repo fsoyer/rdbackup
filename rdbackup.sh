@@ -267,7 +267,8 @@ then
       echo "Stopping Seafile" >> $SCRIPT_DIR/$LOG_FILE
       $SSHCMD "systemctl stop seahub"
       $SSHCMD "systemctl stop seafile"
-      $SSHCMD "su - seafile -c 'seafile-server-latest/seaf-gc.sh'"
+      echo "Running Seafile garbage collector" >> $SCRIPT_DIR/$LOG_FILE
+      $SSHCMD "su - seafile -c 'seafile-server-latest/seaf-gc.sh'"  >> $SCRIPT_DIR/$LOG_FILE
       ERROR=$?
          if [ $ERROR -ne 0 ]
          then
