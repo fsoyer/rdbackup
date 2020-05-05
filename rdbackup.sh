@@ -443,6 +443,8 @@ then
 
    if [ $STOPSEAFILE -eq 1 ]
    then
+      echo "Clearing Seahub cache" >> $SCRIPT_DIR/$LOG_FILE
+      $SSHCMD "su - seafile -c 'rm -rf /tmp/seahub_cache.old; mv /tmp/seahub_cache /tmp/seahub_cache.old'"  >> $SCRIPT_DIR/$LOG_FILE
       echo "Starting Seafile" >> $SCRIPT_DIR/$LOG_FILE
       $SSHCMD "systemctl start seafile"
       $SSHCMD "systemctl start seahub"
